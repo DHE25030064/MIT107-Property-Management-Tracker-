@@ -1,0 +1,26 @@
+{
+  "name": "mit107-property-management-tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DHE25030064/MIT107-Property-Management-Tracker-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/DHE25030064/MIT107-Property-Management-Tracker-/issues"
+  },
+  "homepage": "https://github.com/DHE25030064/MIT107-Property-Management-Tracker-#readme",
+  "dependencies": {
+    "body-parser": "^2.3.0",
+    "express": "^5.2.1",
+    "sqlite3": "^6.0.1"
+  }
+}
