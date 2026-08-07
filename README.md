@@ -1,7 +1,7 @@
 # Property Management Tracker
 
 ## Team Members
-- Kunal Jain (DHE25030064)
+- Kulwinderjit (DHE25030064)
 - [Team Member 2 Placeholder]
 - [Team Member 3 Placeholder]
 
