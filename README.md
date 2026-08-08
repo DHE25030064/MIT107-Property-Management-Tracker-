@@ -22,3 +22,18 @@ graph TD
     Client[Web Browser - HTML/CSS/JS] -->|HTTP Requests| Server[Express.js Server]
     Server -->|Read/Write Data| DB[(SQLite Database)]
 ```
+
+## Development Progress
+
+### Day 1
+- Initial project setup
+- Created UI templates and static file structure
+- Set up SQLite database schema
+
+### Day 2
+- Implemented user authentication logic
+- Added SQLite login validation using parameterized queries
+- Created Tenant Dashboard layout and functionality
+- Created Admin Dashboard layout and functionality
+- Added navigation between application screens
+- Refined dashboard user interface
