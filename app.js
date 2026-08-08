@@ -40,6 +40,44 @@ app.post('/api/login', (req, res) => {
     });
 });
 
+app.get('/tenant-dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'tenant-dashboard.html'));
+});
+
+// API to create a new maintenance request
+app.post('/api/tenant/requests', (req, res) => {
+    const { title, description, userId } = req.body;
+    if (!title || !description || !userId) {
+        return res.status(400).json({ message: 'Missing fields' });
+    }
+
+    const query = `INSERT INTO MaintenanceRequests (title, description, user_id) VALUES (?, ?, ?)`;
+    db.run(query, [title, description, userId], function(err) {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Internal server error.' });
+        }
+        res.json({ message: 'Request created', id: this.lastID });
+    });
+});
+
+// API to get requests for a tenant
+app.get('/api/tenant/requests', (req, res) => {
+    const userId = req.query.userId;
+    if (!userId) {
+        return res.status(400).json({ message: 'Missing userId' });
+    }
+
+    const query = `SELECT id, title, description, status FROM MaintenanceRequests WHERE user_id = ? ORDER BY id DESC`;
+    db.all(query, [userId], (err, rows) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Internal server error.' });
+        }
+        res.json(rows);
+    });
+});
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
