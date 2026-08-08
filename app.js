@@ -78,6 +78,41 @@ app.get('/api/tenant/requests', (req, res) => {
     });
 });
 
+app.get('/admin-dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'admin-dashboard.html'));
+});
+
+// API to get all requests for admin
+app.get('/api/admin/requests', (req, res) => {
+    const query = `SELECT id, title, description, status, user_id FROM MaintenanceRequests ORDER BY id DESC`;
+    db.all(query, [], (err, rows) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Internal server error.' });
+        }
+        res.json(rows);
+    });
+});
+
+// API to update request status
+app.put('/api/admin/requests/:id', (req, res) => {
+    const id = req.params.id;
+    const { status } = req.body;
+    
+    if (!status) {
+        return res.status(400).json({ message: 'Missing status' });
+    }
+
+    const query = `UPDATE MaintenanceRequests SET status = ? WHERE id = ?`;
+    db.run(query, [status, id], function(err) {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Internal server error.' });
+        }
+        res.json({ message: 'Status updated' });
+    });
+});
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
