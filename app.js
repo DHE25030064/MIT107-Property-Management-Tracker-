@@ -17,6 +17,29 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
 
+// Authentication API
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+    
+    if (!username || !password) {
+        return res.status(400).json({ message: 'Username and password are required.' });
+    }
+    
+    const query = 'SELECT id, username, role FROM Users WHERE username = ? AND password = ?';
+    db.get(query, [username, password], (err, row) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Internal server error.' });
+        }
+        
+        if (row) {
+            res.json({ message: 'Login successful', user: row });
+        } else {
+            res.status(401).json({ message: 'Invalid username or password.' });
+        }
+    });
+});
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

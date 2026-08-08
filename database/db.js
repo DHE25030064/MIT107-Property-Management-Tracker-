@@ -16,7 +16,19 @@ const db = new sqlite3.Database(dbPath, (err) => {
                 username TEXT UNIQUE NOT NULL,
                 password TEXT NOT NULL,
                 role TEXT NOT NULL DEFAULT 'tenant'
-            )`);
+            )`, (err) => {
+                if (!err) {
+                    db.get(`SELECT COUNT(*) as count FROM Users`, (err, row) => {
+                        if (!err && row.count === 0) {
+                            const insert = db.prepare(`INSERT INTO Users (username, password, role) VALUES (?, ?, ?)`);
+                            insert.run('admin', 'admin123', 'admin');
+                            insert.run('tenant', 'tenant123', 'tenant');
+                            insert.finalize();
+                            console.log('Database seeded with initial users.');
+                        }
+                    });
+                }
+            });
 
             db.run(`CREATE TABLE IF NOT EXISTS MaintenanceRequests (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
