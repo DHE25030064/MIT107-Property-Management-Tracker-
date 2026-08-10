@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${req.id}</td>
                     <td>${req.user_id}</td>
                     <td>${req.title}</td>
-                    <td>${req.description}</td>
+                    <td>${req.description.substring(0, 30)}${req.description.length > 30 ? '...' : ''}</td>
                     <td>
                         <select class="status-select" data-id="${req.id}">
                             <option value="Pending" ${req.status === 'Pending' ? 'selected' : ''}>Pending</option>
@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </td>
                     <td>
                         <button class="btn-small update-btn" data-id="${req.id}">Update</button>
+                        <a href="/request-details?id=${req.id}" class="btn-small" style="text-decoration: none; display: inline-block; margin-top: 5px; background-color: #17a2b8; text-align: center; width: 100%; box-sizing: border-box;">View</a>
                     </td>
                 `;
                 tableBody.appendChild(tr);

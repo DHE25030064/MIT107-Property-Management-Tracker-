@@ -24,8 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 tr.innerHTML = `
                     <td>${req.id}</td>
                     <td>${req.title}</td>
-                    <td>${req.description}</td>
+                    <td>${req.description.substring(0, 30)}${req.description.length > 30 ? '...' : ''}</td>
                     <td>${req.status}</td>
+                    <td><a href="/request-details?id=${req.id}" class="btn-small" style="text-decoration: none;">View</a></td>
                 `;
                 tableBody.appendChild(tr);
             });

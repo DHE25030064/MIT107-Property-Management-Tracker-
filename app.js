@@ -113,6 +113,27 @@ app.put('/api/admin/requests/:id', (req, res) => {
     });
 });
 
+app.get('/request-details', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'request-details.html'));
+});
+
+// API to get a single request by ID
+app.get('/api/requests/:id', (req, res) => {
+    const id = req.params.id;
+    const query = `SELECT id, title, description, status, user_id, created_at FROM MaintenanceRequests WHERE id = ?`;
+    
+    db.get(query, [id], (err, row) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Internal server error.' });
+        }
+        if (!row) {
+            return res.status(404).json({ message: 'Request not found.' });
+        }
+        res.json(row);
+    });
+});
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
