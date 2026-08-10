@@ -37,3 +37,11 @@ graph TD
 - Created Admin Dashboard layout and functionality
 - Added navigation between application screens
 - Refined dashboard user interface
+
+### Day 3
+- Completed Maintenance Request module
+- Implemented request details page to view individual requests
+- Enhanced form validation and error handling (client and server-side)
+- Refactored API routes into a separate Express router module
+- Fixed minor UI and functional issues
+- Ensured 100% parameterized SQLite queries for security
