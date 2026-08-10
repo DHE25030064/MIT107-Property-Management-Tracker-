@@ -37,8 +37,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     requestForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const title = document.getElementById('title').value;
-        const description = document.getElementById('description').value;
+        const title = document.getElementById('title').value.trim();
+        const description = document.getElementById('description').value.trim();
+        const errorMessage = document.getElementById('formErrorMessage');
+
+        if (title.length < 5 || description.length < 10) {
+            errorMessage.textContent = 'Title must be at least 5 characters and description 10 characters.';
+            errorMessage.style.display = 'block';
+            return;
+        }
+
+        errorMessage.style.display = 'none';
 
         try {
             const response = await fetch('/api/tenant/requests', {
@@ -51,10 +60,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 requestForm.reset();
                 loadRequests();
             } else {
-                alert('Failed to submit request');
+                const data = await response.json();
+                errorMessage.textContent = data.message || 'Failed to submit request';
+                errorMessage.style.display = 'block';
             }
         } catch (error) {
             console.error('Error submitting request:', error);
+            errorMessage.textContent = 'An error occurred while submitting.';
+            errorMessage.style.display = 'block';
         }
     });
 

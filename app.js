@@ -46,9 +46,17 @@ app.get('/tenant-dashboard', (req, res) => {
 
 // API to create a new maintenance request
 app.post('/api/tenant/requests', (req, res) => {
-    const { title, description, userId } = req.body;
+    let { title, description, userId } = req.body;
+    
     if (!title || !description || !userId) {
         return res.status(400).json({ message: 'Missing fields' });
+    }
+
+    title = title.trim();
+    description = description.trim();
+
+    if (title.length < 5 || description.length < 10) {
+        return res.status(400).json({ message: 'Title or description too short' });
     }
 
     const query = `INSERT INTO MaintenanceRequests (title, description, user_id) VALUES (?, ?, ?)`;
