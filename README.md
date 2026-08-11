@@ -14,11 +14,17 @@ The Property Management Tracker is a web-based application designed to streamlin
 - **Database**: SQLite (with Parameterized Queries)
 
 ## Installation Steps
-1. Clone the repository: `git clone <repo_url>`
-2. Navigate to the project directory: `cd MIT107-Property-Management-Tracker`
+1. Clone the repository: `git clone https://github.com/DHE25030064/MIT107-Property-Management-Tracker-.git`
+2. Navigate to the project directory: `cd MIT107-Property-Management-Tracker-`
 3. Install dependencies: `npm install`
 4. Start the application: `node app.js`
 5. Open a web browser and go to `http://localhost:3000`
+
+## Default Test Credentials
+| Role  | Username | Password  |
+|-------|----------|-----------|
+| Admin | admin    | admin123  |
+| Tenant| tenant   | tenant123 |
 
 ## Folder Structure
 ```text
@@ -83,7 +89,9 @@ This Property Management Tracker aims to foster transparency, accountability, an
 - Enhanced form validation and error handling (client and server-side)
 - Refactored API routes into a separate Express router module
 - Fixed minor UI and functional issues
-### Day 4 (Final Day)
+- Ensured 100% parameterized SQLite queries for security
+
+### Day 4 (Final Session)
 - Finalized authentication flow logic and redirect handling.
 - Completed full CRUD functionality for the Maintenance Request module.
 - Added ability for Tenants to Edit and Delete their 'Pending' requests.
