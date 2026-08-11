@@ -44,4 +44,10 @@ graph TD
 - Enhanced form validation and error handling (client and server-side)
 - Refactored API routes into a separate Express router module
 - Fixed minor UI and functional issues
-- Ensured 100% parameterized SQLite queries for security
+### Day 4 (Final Day)
+- Finalized authentication flow logic and redirect handling.
+- Completed full CRUD functionality for the Maintenance Request module.
+- Added ability for Tenants to Edit and Delete their 'Pending' requests.
+- Added ability for Admins to Delete requests.
+- Ensured 100% parameterized SQLite queries throughout all endpoints.
+- Handled client and server-side validation and improved error message visibility.
