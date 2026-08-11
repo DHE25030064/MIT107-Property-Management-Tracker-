@@ -1,61 +1,61 @@
 # UML Class Diagram
 
-```mermaid
-classDiagram
-    class User {
-        +Integer id
-        +String username
-        +String password
-        +String role
-    }
+## Class Diagram - Property Management Tracker
 
-    class MaintenanceRequest {
-        +Integer id
-        +String title
-        +String description
-        +String status
-        +Integer user_id
-        +DateTime created_at
-    }
+![UML Class Diagram](./public/images/uml_class_diagram.png)
 
-    class StatusHistory {
-        +Integer id
-        +Integer request_id
-        +String old_status
-        +String new_status
-        +DateTime changed_at
-    }
+### Class Descriptions
 
-    User "1" -- "0..*" MaintenanceRequest : submits
-    MaintenanceRequest "1" -- "0..*" StatusHistory : tracks
-```
+#### User
+| Section    | Detail |
+|------------|--------|
+| Attributes | - userId : Integer |
+|            | - name : String |
+|            | - email : String |
+|            | - password : String |
+|            | - role : String |
+| Methods    | + login() : void |
+|            | + logout() : void |
+
+#### Admin *(extends User)*
+| Section    | Detail |
+|------------|--------|
+| Attributes | - adminId : Integer |
+|            | - name : String |
+| Methods    | + viewAllRequests() : void |
+|            | + updateRequestStatus() : void |
+
+#### MaintenanceRequest
+| Section    | Detail |
+|------------|--------|
+| Attributes | - requestId : Integer |
+|            | - title : String |
+|            | - description : String |
+|            | - status : String |
+|            | - createdAt : DateTime |
+| Methods    | + createRequest() : void |
+|            | + updateRequest() : void |
+|            | + viewRequest() : void |
+
+### Relationships
+
+| From  | To                 | Type        | Multiplicity | Label   |
+|-------|--------------------|-------------|--------------|---------|
+| User  | MaintenanceRequest | Association | 1 to 0..*   | creates |
+| Admin | MaintenanceRequest | Association | 1 to 0..*   | manages |
+| Admin | User               | Inheritance | —            | extends |
+
+---
 
 # Use Case Diagram
 
-```mermaid
-usecaseDiagram
-    actor Tenant
-    actor Admin
-
-    package "Property Management System" {
-        usecase "Login" as UC1
-        usecase "Submit Maintenance Request" as UC2
-        usecase "View Own Requests" as UC3
-        usecase "View Request Details" as UC4
-        usecase "View All Requests" as UC5
-        usecase "Update Request Status" as UC6
-        usecase "Logout" as UC7
-    }
-
-    Tenant --> UC1
-    Tenant --> UC2
-    Tenant --> UC3
-    Tenant --> UC4
-    Tenant --> UC7
-
-    Admin --> UC1
-    Admin --> UC4
-    Admin --> UC5
-    Admin --> UC6
-    Admin --> UC7
+```
+Actor: Tenant                          Actor: Admin
+--------------                         ------------
+     |                                      |
+     |---> Login                            |---> Login
+     |---> Submit Maintenance Request       |---> View All Requests
+     |---> View Own Requests                |---> Update Request Status
+     |---> View Request Details             |---> View Request Details
+     |---> Logout                           |---> Logout
 ```
