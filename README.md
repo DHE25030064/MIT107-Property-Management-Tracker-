@@ -45,9 +45,6 @@ The Property Management Tracker is a web-based application designed to streamlin
     └── tenant-dashboard.html
 ```
 
-## AI Tools Used
-- Gemini (Google): Used for code generation, debugging, refactoring, and generating documentation.
-
 ## UML Class Diagram
 
 ![UML Class Diagram](./public/images/uml_class_diagram.png)
