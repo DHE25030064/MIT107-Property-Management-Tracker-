@@ -92,4 +92,64 @@ router.get('/requests/:id', (req, res) => {
     });
 });
 
+// API to update a request (Tenant)
+router.put('/tenant/requests/:id', (req, res) => {
+    const id = req.params.id;
+    let { title, description, userId } = req.body;
+    
+    if (!title || !description || !userId) {
+        return res.status(400).json({ message: 'Missing fields' });
+    }
+
+    title = title.trim();
+    description = description.trim();
+
+    if (title.length < 5 || description.length < 10) {
+        return res.status(400).json({ message: 'Title or description too short' });
+    }
+
+    // Only allow update if status is Pending and it belongs to the user
+    const checkQuery = `SELECT status FROM MaintenanceRequests WHERE id = ? AND user_id = ?`;
+    db.get(checkQuery, [id, userId], (err, row) => {
+        if (err) return res.status(500).json({ message: 'Database error' });
+        if (!row) return res.status(404).json({ message: 'Request not found or access denied' });
+        if (row.status !== 'Pending') return res.status(400).json({ message: 'Cannot edit a request that is no longer pending' });
+
+        const updateQuery = `UPDATE MaintenanceRequests SET title = ?, description = ? WHERE id = ?`;
+        db.run(updateQuery, [title, description, id], function(err) {
+            if (err) return res.status(500).json({ message: 'Database error' });
+            res.json({ message: 'Request updated' });
+        });
+    });
+});
+
+// API to delete a request
+router.delete('/requests/:id', (req, res) => {
+    const id = req.params.id;
+    const userId = req.query.userId;
+    const role = req.query.role; // Pass role to allow admin to delete any
+
+    if (!userId || !role) {
+        return res.status(400).json({ message: 'Missing user context' });
+    }
+
+    const checkQuery = `SELECT user_id, status FROM MaintenanceRequests WHERE id = ?`;
+    db.get(checkQuery, [id], (err, row) => {
+        if (err) return res.status(500).json({ message: 'Database error' });
+        if (!row) return res.status(404).json({ message: 'Request not found' });
+        
+        // Tenant can only delete if it's theirs and pending
+        if (role === 'tenant') {
+            if (row.user_id != userId) return res.status(403).json({ message: 'Access denied' });
+            if (row.status !== 'Pending') return res.status(400).json({ message: 'Cannot delete a request that is in progress or completed' });
+        }
+
+        const deleteQuery = `DELETE FROM MaintenanceRequests WHERE id = ?`;
+        db.run(deleteQuery, [id], function(err) {
+            if (err) return res.status(500).json({ message: 'Database error' });
+            res.json({ message: 'Request deleted' });
+        });
+    });
+});
+
 module.exports = router;

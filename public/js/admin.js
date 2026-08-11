@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </td>
                     <td>
                         <button class="btn-small update-btn" data-id="${req.id}">Update</button>
+                        <button class="btn-small delete-btn" data-id="${req.id}" style="background-color: #dc3545; margin-top: 5px; width: 100%;">Delete</button>
                         <a href="/request-details?id=${req.id}" class="btn-small" style="text-decoration: none; display: inline-block; margin-top: 5px; background-color: #17a2b8; text-align: center; width: 100%; box-sizing: border-box;">View</a>
                     </td>
                 `;
@@ -61,6 +62,29 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     } catch (err) {
                         console.error('Error updating status:', err);
+                    }
+                });
+            });
+
+            // Add event listeners for delete buttons
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    if (!confirm('Are you sure you want to delete this request?')) return;
+                    
+                    const id = e.target.getAttribute('data-id');
+                    try {
+                        const res = await fetch(`/api/requests/${id}?userId=${user.id}&role=${user.role}`, {
+                            method: 'DELETE'
+                        });
+                        if (res.ok) {
+                            loadRequests();
+                        } else {
+                            const data = await res.json();
+                            alert(data.message || 'Failed to delete request');
+                        }
+                    } catch (err) {
+                        console.error('Error deleting request:', err);
+                        alert('Error deleting request');
                     }
                 });
             });
