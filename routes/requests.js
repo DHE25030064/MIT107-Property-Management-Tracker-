@@ -2,10 +2,15 @@ const express = require('express');
 const router = express.Router();
 const db = require('../database/db');
 
+// ==========================================
+// Tenant Routes
+// ==========================================
+
 // API to create a new maintenance request (Tenant)
 router.post('/tenant/requests', (req, res) => {
     let { title, description, userId } = req.body;
     
+    // Ensure all required fields are present
     if (!title || !description || !userId) {
         return res.status(400).json({ message: 'Missing fields' });
     }
@@ -13,10 +18,12 @@ router.post('/tenant/requests', (req, res) => {
     title = title.trim();
     description = description.trim();
 
+    // Client and server-side validation to ensure content meets minimum length
     if (title.length < 5 || description.length < 10) {
         return res.status(400).json({ message: 'Title or description too short' });
     }
 
+    // Parameterized query for inserting new request
     const query = `INSERT INTO MaintenanceRequests (title, description, user_id) VALUES (?, ?, ?)`;
     db.run(query, [title, description, userId], function(err) {
         if (err) {
@@ -27,13 +34,14 @@ router.post('/tenant/requests', (req, res) => {
     });
 });
 
-// API to get requests for a tenant
+// API to get requests for a specific tenant
 router.get('/tenant/requests', (req, res) => {
     const userId = req.query.userId;
     if (!userId) {
         return res.status(400).json({ message: 'Missing userId' });
     }
 
+    // Retrieve only the requests belonging to the logged-in tenant
     const query = `SELECT id, title, description, status FROM MaintenanceRequests WHERE user_id = ? ORDER BY id DESC`;
     db.all(query, [userId], (err, rows) => {
         if (err) {
@@ -44,8 +52,13 @@ router.get('/tenant/requests', (req, res) => {
     });
 });
 
-// API to get all requests for admin
+// ==========================================
+// Admin Routes
+// ==========================================
+
+// API to get all requests across the system (Admin only)
 router.get('/admin/requests', (req, res) => {
+    // Retrieve all requests in descending order (newest first)
     const query = `SELECT id, title, description, status, user_id FROM MaintenanceRequests ORDER BY id DESC`;
     db.all(query, [], (err, rows) => {
         if (err) {
@@ -56,7 +69,7 @@ router.get('/admin/requests', (req, res) => {
     });
 });
 
-// API to update request status (Admin)
+// API to update request status (Admin only)
 router.put('/admin/requests/:id', (req, res) => {
     const id = req.params.id;
     const { status } = req.body;
@@ -65,6 +78,7 @@ router.put('/admin/requests/:id', (req, res) => {
         return res.status(400).json({ message: 'Missing status' });
     }
 
+    // Update the status of a specific request
     const query = `UPDATE MaintenanceRequests SET status = ? WHERE id = ?`;
     db.run(query, [status, id], function(err) {
         if (err) {
@@ -75,7 +89,11 @@ router.put('/admin/requests/:id', (req, res) => {
     });
 });
 
-// API to get a single request by ID
+// ==========================================
+// Shared Routes
+// ==========================================
+
+// API to get a single request by ID (Used by Request Details page)
 router.get('/requests/:id', (req, res) => {
     const id = req.params.id;
     const query = `SELECT id, title, description, status, user_id, created_at FROM MaintenanceRequests WHERE id = ?`;
