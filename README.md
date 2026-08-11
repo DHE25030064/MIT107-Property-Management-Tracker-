@@ -5,8 +5,6 @@ The Property Management Tracker is a web-based application designed to streamlin
 
 ## Team Members
 - Kulwinderjit (DHE25030064)
-- [Team Member 2 Placeholder]
-- [Team Member 3 Placeholder]
 
 ## Tech Stack
 - **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
@@ -53,10 +51,36 @@ The Property Management Tracker is a web-based application designed to streamlin
 ## System Architecture
 The application follows a simple client-server architecture:
 
-```mermaid
-graph TD
-    Client[Web Browser - HTML/CSS/JS] -->|HTTP Requests / REST API| Server[Node.js + Express.js Server]
-    Server -->|Parameterized Queries| DB[(SQLite Database)]
+```
++----------------------+
+|       User           |
+| (Tenant / Admin)     |
++----------+-----------+
+           |
+           | HTTP Request
+           v
++----------------------+
+|     Frontend         |
+| HTML + CSS + JS      |
++----------+-----------+
+           |
+           | Form Data / API Request
+           v
++----------------------+
+| Backend (Express.js) |
+| Authentication       |
+| Request Management   |
++----------+-----------+
+           |
+           | SQL Queries
+           v
++----------------------+
+| SQLite Database      |
+|----------------------|
+| Users                |
+| MaintenanceRequests  |
+| StatusHistory        |
++----------------------+
 ```
 
 ## Security Audit
